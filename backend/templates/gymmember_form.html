@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} GymMember | NexusGym{% endblock %}
+{% block page_title %}{% if editing %}Edit GymMember{% else %}New GymMember{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ record.name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ record.email|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ record.phone|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Membership Type</label>
+        <select name="membership_type">
+          <option value="monthly" {% if record.membership_type == 'monthly' %}selected{% endif %}>Monthly</option>
+          <option value="quarterly" {% if record.membership_type == 'quarterly' %}selected{% endif %}>Quarterly</option>
+          <option value="annual" {% if record.membership_type == 'annual' %}selected{% endif %}>Annual</option>
+          <option value="day_pass" {% if record.membership_type == 'day_pass' %}selected{% endif %}>Day Pass</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Join Date</label>
+        <input type="date" name="join_date" value="{{ record.join_date|date:'Y-m-d'|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Expiry Date</label>
+        <input type="date" name="expiry_date" value="{{ record.expiry_date|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="active" {% if record.status == 'active' %}selected{% endif %}>Active</option>
+          <option value="expired" {% if record.status == 'expired' %}selected{% endif %}>Expired</option>
+          <option value="frozen" {% if record.status == 'frozen' %}selected{% endif %}>Frozen</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Emergency Contact</label>
+        <input type="text" name="emergency_contact" value="{{ record.emergency_contact|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} GymMember</button>
+      <a href="/gymmembers/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
