@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Fitnessclasses | NexusGym{% endblock %}
+{% block page_title %}Fitnessclasses{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search fitnessclasses...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Class Type</option>
+      <option value="yoga" {% if status_filter == 'yoga' %}selected{% endif %}>Yoga</option>
+      <option value="crossfit" {% if status_filter == 'crossfit' %}selected{% endif %}>CrossFit</option>
+      <option value="zumba" {% if status_filter == 'zumba' %}selected{% endif %}>Zumba</option>
+      <option value="pilates" {% if status_filter == 'pilates' %}selected{% endif %}>Pilates</option>
+      <option value="hiit" {% if status_filter == 'hiit' %}selected{% endif %}>HIIT</option>
+      <option value="spin" {% if status_filter == 'spin' %}selected{% endif %}>Spin</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/fitnessclasses/create/" class="btn btn-primary">+ New FitnessClass</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Instructor</th><th>Class Type</th><th>Schedule</th><th>Capacity</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/fitnessclasses/{{ r.pk }}/edit/"><strong>{{ r.name }}</strong></a></td>
+        <td>{{ r.instructor|default:"-" }}</td>
+        <td><span class="badge badge-blue">{{ r.get_class_type_display }}</span></td>
+        <td>{{ r.schedule|default:"-" }}</td>
+        <td>{{ r.capacity|default:"-" }}</td>
+        <td class="actions">
+          <a href="/fitnessclasses/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/fitnessclasses/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No fitnessclasses found.</p>
+    <a href="/fitnessclasses/create/" class="btn btn-primary" style="margin-top:1rem">Create FitnessClass</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
